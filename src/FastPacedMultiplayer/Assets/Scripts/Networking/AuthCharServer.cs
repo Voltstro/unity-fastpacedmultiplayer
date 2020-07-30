@@ -30,7 +30,7 @@ namespace Networking
 			CharacterState state = character.state;
 			while (movesMade < character.InputBufferSize && inputBuffer.Count > 0)
 			{
-				state = CharacterState.Move(state, inputBuffer.Dequeue(), character.Speed, serverTick);
+				state = character.Move(state, inputBuffer.Dequeue(), serverTick);
 				characterController.Move(state.position - characterController.transform.position);
 				movesMade++;
 			}

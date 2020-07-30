@@ -50,7 +50,7 @@ namespace Networking
 
 		private void ApplyInput(CharacterInput input)
 		{
-			predictedState = CharacterState.Move(predictedState, input, character.Speed, 0);
+			predictedState = character.Move(predictedState, input, 0);
 		}
 	}
 }

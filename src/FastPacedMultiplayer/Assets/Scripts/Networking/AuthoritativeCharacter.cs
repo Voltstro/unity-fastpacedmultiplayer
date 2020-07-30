@@ -65,6 +65,19 @@ namespace Networking
 			characterController.Move(overrideState.position - transform.position);
 		}
 
+		public CharacterState Move(CharacterState previous, CharacterInput input, int timestamp)
+		{
+			CharacterState characterState = new CharacterState
+			{
+				moveNum = previous.moveNum + 1,
+				timestamp = timestamp,
+				position = speed * Time.fixedDeltaTime * new Vector3(input.Directions.x, 0, input.Directions.y) +
+				           previous.position,
+			};
+
+			return characterState;
+		}
+
 		public void OnServerStateChange(CharacterState oldState, CharacterState newState)
 		{
 			state = newState;
