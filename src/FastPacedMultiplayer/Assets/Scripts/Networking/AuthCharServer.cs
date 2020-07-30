@@ -13,6 +13,8 @@ namespace Networking
 
 		private CharacterController characterController;
 
+		private CharacterInput lastInput;
+
 		private void Awake()
 		{
 			inputBuffer = new Queue<CharacterInput>();
@@ -23,19 +25,13 @@ namespace Networking
 
 		private void Update()
 		{
-			if (movesMade > 0)
-				movesMade--;
-			if (movesMade != 0) return;
-
 			CharacterState state = character.state;
-			while (movesMade < character.InputBufferSize && inputBuffer.Count > 0)
-			{
-				state = character.Move(state, inputBuffer.Dequeue(), serverTick);
-				characterController.Move(state.position - characterController.transform.position);
-				movesMade++;
-			}
 
-			if (movesMade <= 0) return;
+			if (inputBuffer.Count != 0)
+				lastInput = inputBuffer.Dequeue();
+
+			state = character.Move(state, lastInput, serverTick);
+			character.SyncState(state);
 
 			state.position = transform.position;
 			character.state = state;

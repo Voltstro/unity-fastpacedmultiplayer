@@ -11,6 +11,8 @@ namespace Networking
 		private AuthCharPredictor predictor;
 		private int currentInput;
 
+		private CharacterInput lastInputSent;
+
 		private void Awake()
 		{
 			inputBuffer = new List<CharacterInput>();
@@ -21,12 +23,14 @@ namespace Networking
 		private void Update()
 		{
 			Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-			if (inputBuffer.Count == 0 && input == Vector2.zero)
+			if (inputBuffer.Count == 0 && input == Vector2.zero && lastInputSent.Directions == Vector2.zero)
 				return;
 
 			CharacterInput charInput = new CharacterInput(input, currentInput++);
 			predictor.AddInput(charInput);
 			inputBuffer.Add(charInput);
+
+			lastInputSent = charInput;
 		}
 
 		private void FixedUpdate()
