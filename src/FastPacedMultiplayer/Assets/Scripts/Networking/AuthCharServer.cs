@@ -8,10 +8,7 @@ namespace Networking
 	{
 		private Queue<CharacterInput> inputBuffer;
 		private AuthoritativeCharacter character;
-		private int movesMade;
 		private int serverTick;
-
-		private CharacterController characterController;
 
 		private CharacterInput lastInput;
 
@@ -20,7 +17,6 @@ namespace Networking
 			inputBuffer = new Queue<CharacterInput>();
 			character = GetComponent<AuthoritativeCharacter>();
 			character.state = CharacterState.Zero;
-			characterController = GetComponent<CharacterController>();
 		}
 
 		private void Update()
@@ -43,10 +39,9 @@ namespace Networking
 			serverTick++;    
 		}
 
-		public void Move(CharacterInput[] inputs)
+		public void Move(CharacterInput input)
 		{
-			foreach (var input in inputs)
-				inputBuffer.Enqueue(input);
+			inputBuffer.Enqueue(input);
 		}
 	}
 }

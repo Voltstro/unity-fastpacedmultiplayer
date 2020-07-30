@@ -23,23 +23,18 @@ namespace Networking
 		private void Update()
 		{
 			Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-			if (inputBuffer.Count == 0 && input == Vector2.zero && lastInputSent.Directions == Vector2.zero)
-				return;
+			bool jump = Input.GetKey(KeyCode.Space);
 
-			CharacterInput charInput = new CharacterInput(input, currentInput++);
+			//if (inputBuffer.Count == 0 && input == Vector2.zero && !jump && lastInputSent.Directions == Vector2.zero)
+			//	return;
+
+			CharacterInput charInput = new CharacterInput(input, jump, currentInput++);
 			predictor.AddInput(charInput);
+
+			character.CmdMove(charInput);
 			inputBuffer.Add(charInput);
 
 			lastInputSent = charInput;
-		}
-
-		private void FixedUpdate()
-		{
-			if (inputBuffer.Count < character.InputBufferSize)
-				return;
-
-			character.CmdMove(inputBuffer.ToArray());
-			inputBuffer.Clear();
 		}
 	}
 }
