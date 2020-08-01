@@ -20,15 +20,13 @@ namespace Networking
 			predictor = GetComponent<AuthCharPredictor>();
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
 			Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-			bool jump = Input.GetKey(KeyCode.Space);
-
 			//if (inputBuffer.Count == 0 && input == Vector2.zero && !jump && lastInputSent.Directions == Vector2.zero)
 			//	return;
 
-			CharacterInput charInput = new CharacterInput(input, jump, currentInput++);
+			CharacterInput charInput = new CharacterInput(input, currentInput++);
 			predictor.AddInput(charInput);
 
 			character.CmdMove(charInput);
