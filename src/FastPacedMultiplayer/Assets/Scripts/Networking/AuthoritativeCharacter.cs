@@ -1,4 +1,3 @@
-using System;
 using Interfaces;
 using Mirror;
 using Structs;
@@ -19,6 +18,8 @@ namespace Networking
 		[SerializeField] private float jumpHeight = 3f;
 
 		[SerializeField] private float gravityAmount = 9.81f;
+
+		[SerializeField] private Transform cameraTransform;
 
 		#endregion
 
@@ -80,6 +81,9 @@ namespace Networking
 		public void SyncState(CharacterState overrideState)
 		{
 			characterController.Move(overrideState.position - transform.position);
+
+			transform.Rotate(Vector3.up * overrideState.mouseX);
+			cameraTransform.localRotation = Quaternion.Euler(overrideState.rotationX, 0, 0);
 		}
 
 		public void OnServerStateChange(CharacterState oldState, CharacterState newState)
@@ -103,17 +107,16 @@ namespace Networking
 				moveNum = previous.moveNum + 1,
 				timestamp = timestamp,
 				position = previous.position,
-				velocity = previous.velocity
+				velocity = previous.velocity,
+				rotationX = previous.rotationX
 			};
 
 			bool isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-			characterState.velocity.y = previous.velocity.y;
-
 			//Calculate velocity
-			//characterState.velocity = new Vector3(input.Directions.x, 0, input.Directions.y) * Time.deltaTime * moveSpeed;
-			//characterState.velocity = new Vector3(transform.right.x * input.Directions.x, 0, transform.forward.z * input.Directions.y) * moveSpeed;
-			characterState.velocity = (transform.right * input.Directions.x + transform.forward * input.Directions.y) * moveSpeed;
+			Vector3 inputs = new Vector3(input.Directions.x, 0f, input.Directions.y) * moveSpeed;
+			characterState.velocity = transform.TransformDirection(inputs);
+			characterState.velocity.y = previous.velocity.y;
 
 			//Gravity
 			if(!isGrounded)
@@ -126,6 +129,11 @@ namespace Networking
 
 			//Apply velocity to position
 			characterState.position += characterState.velocity * Time.deltaTime;
+
+			//Mouse Movement
+			characterState.rotationX -= input.MouseDirections.y * Time.deltaTime;
+			characterState.rotationX = Mathf.Clamp(characterState.rotationX, -90f, 90f);
+			characterState.mouseX = input.MouseDirections.x * Time.deltaTime; 
 
 			return characterState;
 		}

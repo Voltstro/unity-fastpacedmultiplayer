@@ -11,7 +11,7 @@ namespace Networking
 		private AuthCharPredictor predictor;
 		private int currentInput;
 
-		private CharacterInput lastInputSent;
+		private float mouseSensitivity = 100f;
 
 		private void Awake()
 		{
@@ -22,17 +22,17 @@ namespace Networking
 
 		private void FixedUpdate()
 		{
-			Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+			Vector2 keyboardInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+			Vector2 mouseInput = new Vector2(Input.GetAxis("Mouse X") * mouseSensitivity, Input.GetAxis("Mouse Y") * mouseSensitivity);
+
 			//if (inputBuffer.Count == 0 && input == Vector2.zero && !jump && lastInputSent.Directions == Vector2.zero)
 			//	return;
 
-			CharacterInput charInput = new CharacterInput(input, currentInput++);
+			CharacterInput charInput = new CharacterInput(keyboardInput, mouseInput, currentInput++);
 			predictor.AddInput(charInput);
 
 			character.CmdMove(charInput);
 			inputBuffer.Add(charInput);
-
-			lastInputSent = charInput;
 		}
 	}
 }
