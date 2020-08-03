@@ -126,7 +126,8 @@ namespace Networking
 				characterState.velocity.y = -2f;
 
 			//Jumping
-			//TODO: Add jumping
+			if (input.Jump && isGrounded)
+				characterState.velocity.y = jumpHeight;
 
 			//Apply velocity to position
 			characterState.position += characterState.velocity * Time.deltaTime;
