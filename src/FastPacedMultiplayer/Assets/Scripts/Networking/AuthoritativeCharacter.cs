@@ -82,8 +82,8 @@ namespace Networking
 		{
 			characterController.Move(overrideState.position - transform.position);
 
-			transform.Rotate(Vector3.up * overrideState.mouseX);
-			cameraTransform.localRotation = Quaternion.Euler(overrideState.rotationX, 0, 0);
+			transform.rotation = Quaternion.Euler(0, overrideState.rotationY, 0);
+			cameraTransform.rotation = Quaternion.Euler(overrideState.rotationX, overrideState.rotationY, 0);
 		}
 
 		public void OnServerStateChange(CharacterState oldState, CharacterState newState)
@@ -108,7 +108,8 @@ namespace Networking
 				timestamp = timestamp,
 				position = previous.position,
 				velocity = previous.velocity,
-				rotationX = previous.rotationX
+				rotationX = previous.rotationX,
+				rotationY = previous.rotationY
 			};
 
 			bool isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -131,9 +132,10 @@ namespace Networking
 			characterState.position += characterState.velocity * Time.deltaTime;
 
 			//Mouse Movement
-			characterState.rotationX -= input.MouseDirections.y * Time.deltaTime;
-			characterState.rotationX = Mathf.Clamp(characterState.rotationX, -90f, 90f);
-			characterState.mouseX = input.MouseDirections.x * Time.deltaTime; 
+			characterState.rotationX -= input.MouseDirections.y * 0.02f;
+			characterState.rotationY += input.MouseDirections.x * 0.02f;
+
+			characterState.rotationX = Mathf.Clamp(characterState.rotationX, -90, 90);
 
 			return characterState;
 		}

@@ -9,7 +9,7 @@ namespace Structs
 		public Vector3 velocity;
 
 		public float rotationX;
-		public float mouseX;
+		public float rotationY;
 
 		public int moveNum;
 		public int timestamp;
@@ -24,7 +24,7 @@ namespace Structs
 			new CharacterState {
 				position = Vector3.zero,
 				rotationX = 0f,
-				mouseX = 0f,
+				rotationY = 0f,
 				moveNum = 0,
 				timestamp = 0
 			};
@@ -36,7 +36,7 @@ namespace Structs
 			{
 				position = Vector3.Lerp(from.position, to.position, t),
 				rotationX = Mathf.Lerp(from.rotationX, to.rotationX, t),
-				mouseX = Mathf.Lerp(from.mouseX, to.mouseX, t),
+				rotationY = Mathf.Lerp(from.rotationY, to.rotationY, t),
 				moveNum = 0,
 				timestamp = 0
 			};
