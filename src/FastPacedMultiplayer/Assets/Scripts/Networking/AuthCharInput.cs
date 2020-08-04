@@ -20,7 +20,7 @@ namespace Networking
 			predictor = GetComponent<AuthCharPredictor>();
 		}
 
-		private void FixedUpdate()
+		private void Update()
 		{
 			Vector2 keyboardInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 			Vector2 mouseInput = new Vector2(Input.GetAxisRaw("Mouse X") * mouseSensitivity, Input.GetAxisRaw("Mouse Y") * mouseSensitivity);
@@ -32,8 +32,16 @@ namespace Networking
 			CharacterInput charInput = new CharacterInput(keyboardInput, mouseInput, jump, currentInput++);
 			predictor.AddInput(charInput);
 
-			character.CmdMove(charInput);
 			inputBuffer.Add(charInput);
+		}
+
+		private void FixedUpdate()
+		{
+			if (inputBuffer.Count < character.InputBufferSize)
+				return;
+
+			character.CmdMove(inputBuffer.ToArray());
+			inputBuffer.Clear();
 		}
 	}
 }

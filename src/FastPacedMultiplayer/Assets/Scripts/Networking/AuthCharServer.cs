@@ -39,9 +39,10 @@ namespace Networking
 			serverTick++;    
 		}
 
-		public void Move(CharacterInput input)
+		public void Move(CharacterInput[] inputs)
 		{
-			inputBuffer.Enqueue(input);
+			foreach (CharacterInput input in inputs)
+				inputBuffer.Enqueue(input);
 		}
 	}
 }

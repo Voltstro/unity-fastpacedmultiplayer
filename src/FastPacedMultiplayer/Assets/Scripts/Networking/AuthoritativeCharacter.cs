@@ -93,9 +93,9 @@ namespace Networking
 		}
 
 		[Command(channel = 0)]
-		public void CmdMove(CharacterInput input)
+		public void CmdMove(CharacterInput[] inputs)
 		{
-			server.Move(input);
+			server.Move(inputs);
 		}
 
 		#region Movement Methods
